@@ -8,7 +8,6 @@
 bool_t
 xdr_rpc_request_is_type_supported (XDR *xdrs, rpc_request_is_type_supported *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->key_system.key_system_val, (u_int *) &objp->key_system.key_system_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -21,7 +20,6 @@ xdr_rpc_request_is_type_supported (XDR *xdrs, rpc_request_is_type_supported *obj
 bool_t
 xdr_rpc_request_mediakeys (XDR *xdrs, rpc_request_mediakeys *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->key_system.key_system_val, (u_int *) &objp->key_system.key_system_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -29,9 +27,17 @@ xdr_rpc_request_mediakeys (XDR *xdrs, rpc_request_mediakeys *objp)
 }
 
 bool_t
+xdr_rpc_request_certificate (XDR *xdrs, rpc_request_certificate *objp)
+{
+	 if (!xdr_array (xdrs, (char **)&objp->certificate.certificate_val, (u_int *) &objp->certificate.certificate_len, ~0,
+		sizeof (uint8_t), (xdrproc_t) xdr_uint8_t))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_rpc_request_callback_info (XDR *xdrs, rpc_request_callback_info *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->hostname.hostname_val, (u_int *) &objp->hostname.hostname_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -45,7 +51,6 @@ xdr_rpc_request_callback_info (XDR *xdrs, rpc_request_callback_info *objp)
 bool_t
 xdr_rpc_request_create_session (XDR *xdrs, rpc_request_create_session *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->init_data_type.init_data_type_val, (u_int *) &objp->init_data_type.init_data_type_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -58,9 +63,17 @@ xdr_rpc_request_create_session (XDR *xdrs, rpc_request_create_session *objp)
 }
 
 bool_t
+xdr_rpc_request_session_load (XDR *xdrs, rpc_request_session_load *objp)
+{
+         if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
+                sizeof (char), (xdrproc_t) xdr_char))
+                 return FALSE;
+        return TRUE;
+}
+
+bool_t
 xdr_rpc_request_load_session (XDR *xdrs, rpc_request_load_session *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -70,12 +83,34 @@ xdr_rpc_request_load_session (XDR *xdrs, rpc_request_load_session *objp)
 bool_t
 xdr_rpc_request_session_update (XDR *xdrs, rpc_request_session_update *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
+#ifdef WPE
+         if (!xdr_array (xdrs, (uint8_t*)&objp->key.key_val, (u_int *) &objp->key.key_len, ~0,
+                sizeof (uint8_t), (xdrproc_t) xdr_uint8_t))
+#else
 	 if (!xdr_array (xdrs, (char **)&objp->key.key_val, (u_int *) &objp->key.key_len, ~0,
 		sizeof (uint8_t), (xdrproc_t) xdr_uint8_t))
+#endif
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_rpc_request_session_remove (XDR *xdrs, rpc_request_session_remove *objp)
+{
+	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_rpc_request_session_close (XDR *xdrs, rpc_request_session_close *objp)
+{
+	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
+		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
 	return TRUE;
 }
@@ -83,7 +118,6 @@ xdr_rpc_request_session_update (XDR *xdrs, rpc_request_session_update *objp)
 bool_t
 xdr_rpc_request_session_release (XDR *xdrs, rpc_request_session_release *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -93,7 +127,6 @@ xdr_rpc_request_session_release (XDR *xdrs, rpc_request_session_release *objp)
 bool_t
 xdr_rpc_request_mediaengine_data (XDR *xdrs, rpc_request_mediaengine_data *objp)
 {
-
 	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,
 		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
@@ -110,7 +143,6 @@ xdr_rpc_request_mediaengine_data (XDR *xdrs, rpc_request_mediaengine_data *objp)
 bool_t
 xdr_rpc_response_generic (XDR *xdrs, rpc_response_generic *objp)
 {
-
 	 if (!xdr_int (xdrs, &objp->platform_val))
 		 return FALSE;
 	return TRUE;
@@ -119,7 +151,6 @@ xdr_rpc_response_generic (XDR *xdrs, rpc_response_generic *objp)
 bool_t
 xdr_rpc_response_create_session (XDR *xdrs, rpc_response_create_session *objp)
 {
-
 	 if (!xdr_int (xdrs, &objp->platform_val))
 		 return FALSE;
 	 if (!xdr_array (xdrs, (char **)&objp->session_id.session_id_val, (u_int *) &objp->session_id.session_id_len, ~0,

@@ -15,14 +15,91 @@
  */
 
 #include <fstream>
+#ifdef WPE
+#include "rpc_cdm_mediaengine_handler.h"
+#include <cdm_logging.h>
+#include <opencdm_xdr.h>
+#else	//chrome
 #include "media/cdm/ppapi/external_open_cdm/src/com/mediaengine/rpc/rpc_cdm_mediaengine_handler.h"
 #include "media/cdm/ppapi/cdm_logging.h"
 #include "media/cdm/ppapi/external_open_cdm/src/com/common/rpc/opencdm_xdr.h"
-
+#endif
 namespace media {
 
 std::string rpcServer = "localhost";
+#ifdef WPE
+RpcCdmMediaengineHandler::RpcCdmMediaengineHandler(char *session_id_val,
+                                                   uint32_t session_id_len,
+                                                   uint8_t *auth_data_val,
+                                                   uint32_t auth_data_len) {
 
+  CDM_DLOG() << "RpcCdmMediaengineHandler::RpcCdmMediaengineHandler";
+  sessionId.id = new char[session_id_len];
+
+  strncpy(sessionId.id,session_id_val,session_id_len);
+  sessionId.idLen = session_id_len;
+
+  if ((rpcClient = clnt_create(rpcServer.c_str(), OPEN_CDM, OPEN_CDM_EME_5,
+                               "tcp")) == NULL) {
+    clnt_pcreateerror(rpcServer.c_str());
+    CDM_DLOG() << "rpcclient creation failed: " << rpcServer.c_str();
+  } else {
+    CDM_DLOG() << "RpcCdmMediaengineHandler connected to server";
+  }
+
+  rpc_response_generic *rpc_response;
+  rpc_request_mediaengine_data rpc_param;
+  rpc_param.session_id.session_id_val = sessionId.id;
+  rpc_param.session_id.session_id_len = sessionId.idLen;
+  rpc_param.auth_data.auth_data_val = auth_data_val;
+  rpc_param.auth_data.auth_data_len = auth_data_len;
+    // TODO(ska): need to check == 0?
+  // if (idXchngShMem == 0) {
+  idXchngShMem = AllocateSharedMemory(sizeof(shmem_info));
+  if (idXchngShMem < 0) {
+    CDM_DLOG() << "idXchngShMem AllocateSharedMemory failed!";
+  }
+  // }
+  shMemInfo = reinterpret_cast<shmem_info *>(MapSharedMemory(idXchngShMem));
+
+  // SHARED MEMORY and SEMAPHORE INITIALIZATION
+  shMemInfo->idSidShMem = 0;
+  this->shMemInfo->idIvShMem = 0;
+  this->shMemInfo->idSampleShMem = 0;
+  this->shMemInfo->idSubsampleDataShMem = 0;
+  this->shMemInfo->sidSize = 1;
+  this->shMemInfo->ivSize = 2;
+  this->shMemInfo->sampleSize = 3;
+  this->shMemInfo->subsampleDataSize = 4;
+
+  unsigned short vals[3];
+  vals[SEM_XCHNG_PUSH] = 1;
+  vals[SEM_XCHNG_DECRYPT] = 0;
+  vals[SEM_XCHNG_PULL] = 0;
+  // if (idXchngSem == 0) {
+  idXchngSem = CreateSemaphoreSet(3, vals);
+  if (idXchngSem < 0) {
+    CDM_DLOG() << "idXchngSem CreateSemaphoreSet failed!";
+  }
+  // }
+
+  rpc_param.id_exchange_shmem = idXchngShMem;
+  rpc_param.id_exchange_sem = idXchngSem;
+
+  CDM_DLOG() << "Calling rpc_open_cdm_mediaengine_1";
+  if ((rpc_response = rpc_open_cdm_mediaengine_1(&rpc_param, rpcClient))
+      == NULL) {
+    CDM_DLOG() << "engine session failed: " << rpcServer.c_str();
+    clnt_perror(rpcClient, rpcServer.c_str());
+    exit(5);
+  } else {
+    CDM_DLOG() << "engine session creation called";
+  }
+
+  CDM_DLOG() << "create media engine session platform response: "
+             << rpc_response->platform_val;
+}
+#else	//chrome
 RpcCdmMediaengineHandler& RpcCdmMediaengineHandler::getInstance() {
   static  RpcCdmMediaengineHandler instance;
   return instance;
@@ -88,6 +165,7 @@ bool RpcCdmMediaengineHandler::CreateMediaEngineSession(char *session_id_val,
   rpc_param.id_exchange_shmem = idXchngShMem;
   rpc_param.id_exchange_sem = idXchngSem;
 
+  CDM_DLOG() << "Calling rpc_open_cdm_mediaengine_1";
   if ((rpc_response = rpc_open_cdm_mediaengine_1(&rpc_param, rpcClient))
       == NULL) {
     CDM_DLOG() << "engine session failed: " << rpcServer.c_str();
@@ -101,15 +179,29 @@ bool RpcCdmMediaengineHandler::CreateMediaEngineSession(char *session_id_val,
              << rpc_response->platform_val;
   return true;
 }
+#endif
 
 RpcCdmMediaengineHandler::~RpcCdmMediaengineHandler() {
   CDM_DLOG() << "RpcCdmMediaengineHandler destruct!";
   // TODO(ska): is shared memory cleaned up correctly?
   // DeleteSemaphoreSet(idXchngSem);
+  delete [] sessionId.id;
   idXchngSem = 0;
   idXchngShMem = 0;
 }
+int RpcCdmMediaengineHandler::ReleaseMem() {
 
+  shMemInfo->idSidShMem = 0;
+  shMemInfo->idIvShMem = 0;
+  shMemInfo->idSampleShMem = 0;
+  shMemInfo->idSubsampleDataShMem = 0;
+  shMemInfo->ivSize = 0;
+  shMemInfo->sampleSize = 0;
+  UnlockSemaphore(idXchngSem, SEM_XCHNG_DECRYPT);
+  LockSemaphore(idXchngSem, SEM_XCHNG_PULL);
+
+  return 1;
+}
 DecryptResponse RpcCdmMediaengineHandler::Decrypt(const uint8_t *pbIv,
                                                   uint32_t cbIv,
                                                   const uint8_t *pbData,
@@ -122,7 +214,6 @@ DecryptResponse RpcCdmMediaengineHandler::Decrypt(const uint8_t *pbIv,
   response.sys_err = 0;
   // TODO(sph): real decryptresponse values need to
   // be written to sharedmem as well
-
   LockSemaphore(idXchngSem, SEM_XCHNG_PUSH);
   CDM_DLOG() << "LOCKed push lock";
 
@@ -143,6 +234,7 @@ DecryptResponse RpcCdmMediaengineHandler::Decrypt(const uint8_t *pbIv,
   memcpy(pSampleShMem, pbData, cbData);
   // delete[] pbData;
 
+  CDM_DLOG() << "memcpy pSampleShMem, pbData";
   shMemInfo->idSubsampleDataShMem = 0;
   shMemInfo->subsampleDataSize = 0;
   CDM_DLOG() << "data ready to decrypt";
@@ -165,7 +257,6 @@ DecryptResponse RpcCdmMediaengineHandler::Decrypt(const uint8_t *pbIv,
   err = DetachExistingSharedMemory(pSampleShMem);
   CDM_DLOG() << "detached sample shmem " << shMemInfo->idSampleShMem << ": "
              << err;
-
   return response;
 }
 

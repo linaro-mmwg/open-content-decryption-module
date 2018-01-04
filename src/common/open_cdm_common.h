@@ -20,7 +20,9 @@
 #ifdef OCDM_USE_PLAYREADY
 #include "media/cdm/ppapi/external_open_cdm/src/include/playready/constants.h"
 #else
+#ifndef WPE
 #include "media/cdm/ppapi/external_open_cdm/src/include/clearkey/constants.h"
+#endif
 #endif
 
 

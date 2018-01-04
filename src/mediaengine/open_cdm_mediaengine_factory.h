@@ -19,17 +19,26 @@
 
 #include <string>
 
+#ifdef WPE
+#include "open_cdm_mediaengine.h"
+#include "open_cdm_mediaengine_impl.h"
+#include "../common/cdm_logging.h"
+#else	//chrome
 #include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine.h"
 #include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine_impl.h"
-
 #include "media/cdm/ppapi/cdm_logging.h"
+#endif
 
 namespace media {
 
 #ifdef OCDM_USE_PLAYREADY
 const std::string open_cdm_key_system = "com.microsoft.playready";
 #else
+#ifdef WPE
+const std::string open_cdm_key_system = "org.w3.clearkey";
+#else
 const std::string open_cdm_key_system = "org.chromium.externalclearkey";
+#endif
 #endif
 
 // TODO(ska): outsource the mapping of key system string
@@ -47,7 +56,7 @@ class OpenCdmMediaengineFactory {
  */
 OpenCdmMediaengine *OpenCdmMediaengineFactory::Create(
     std::string key_system, OpenCdmPlatformSessionId session_id) {
-  if (key_system == open_cdm_key_system) {
+  if (key_system.compare(open_cdm_key_system)) {
     CDM_DLOG() << "Instantiate OpenCdmMediaengineImpl!";
     return new OpenCdmMediaengineImpl(session_id.session_id,
                                       session_id.session_id_len);

@@ -16,11 +16,15 @@
 
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_CDM_OPEN_CDM_PLATFORM_FACTORY_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_CDM_OPEN_CDM_PLATFORM_FACTORY_H_
-
+#ifdef WPE
+#include <open_cdm_platform.h>
+#include <open_cdm_platform_impl.h>
+#include <open_cdm_platform_com_callback_receiver.h>
+#else
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform.h"
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_impl.h"
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com_callback_receiver.h"
-
+#endif
 namespace media {
 
 class OpenCdmPlatformInterfaceFactory {

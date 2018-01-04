@@ -17,7 +17,11 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_H_
 
+#ifdef WPE
+#include <open_cdm_platform_common.h>
+#else 	//chrome
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_common.h"
+#endif
 
 namespace media {
 
@@ -64,7 +68,7 @@ class OpenCdmMediaengine {
   virtual DecryptResponse Decrypt(const uint8_t *pbIv, uint32_t cbIv,
                                   const uint8_t *pbData, uint32_t cbData,
                                   uint8_t *out, uint32_t &out_size) = 0;
-
+  virtual int ReleaseMem() = 0;
  protected:
   OpenCdmMediaengine(char *session_id_val, uint32_t session_id_len);
   OpenCdmMediaengine() {

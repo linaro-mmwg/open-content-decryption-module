@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+#ifdef WPE
+#include "open_cdm_platform_impl.h"
+#include <open_cdm_platform_com_handler_factory.h>
+#include <cdm_logging.h>
+#else
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_impl.h"
 #include "media/cdm/ppapi/external_open_cdm/src/com/cdm/open_cdm_platform_com_handler_factory.h"
 #include "media/cdm/ppapi/cdm_logging.h"
+#endif
 
 namespace media {
 
@@ -42,7 +48,6 @@ MediaKeysCreateSessionResponse OpenCdmPlatformImpl::MediaKeysCreateSession(
 
   response = com_handler_->MediaKeysCreateSession(init_data_type, init_data,
                                                   init_data_length);
-
   return response;
 }
 
@@ -68,6 +73,38 @@ MediaKeySessionUpdateResponse OpenCdmPlatformImpl::MediaKeySessionUpdate(
   return response;
 }
 
+MediaKeySetServerCertificateResponse OpenCdmPlatformImpl::MediaKeySetServerCertificate(
+    const uint8_t *pbServerCert, uint32_t cbServerCert) {
+  CDM_DLOG() << "OpenCdmPlatformCdmiImpl::MediaKeysSetServerCertificate";
+  MediaKeySetServerCertificateResponse response;
+
+  response = com_handler_->MediaKeySetServerCertificate(pbServerCert, cbServerCert);
+
+  return response;
+}
+
+MediaKeySessionRemoveResponse OpenCdmPlatformImpl::MediaKeySessionRemove(
+    char *session_id_val, uint32_t session_id_len) {
+  CDM_DLOG() << "OpenCdmPlatformCdmiImpl::MediaKeySessionRemove";
+  MediaKeySessionRemoveResponse response;
+
+  response = com_handler_->MediaKeySessionRemove(session_id_val,
+                                                  session_id_len);
+
+  return response;
+}
+
+MediaKeySessionCloseResponse OpenCdmPlatformImpl::MediaKeySessionClose(
+    char *session_id_val, uint32_t session_id_len) {
+  CDM_DLOG() << "OpenCdmPlatformCdmiImpl::MediaKeySessionClose";
+  MediaKeySessionCloseResponse response;
+
+  response = com_handler_->MediaKeySessionClose(session_id_val,
+                                                  session_id_len);
+
+  return response;
+}
+
 MediaKeySessionReleaseResponse OpenCdmPlatformImpl::MediaKeySessionRelease(
     char *session_id_val, uint32_t session_id_len) {
   CDM_DLOG() << "OpenCdmPlatformCdmiImpl::MediaKeySessionRelease";
@@ -77,6 +114,14 @@ MediaKeySessionReleaseResponse OpenCdmPlatformImpl::MediaKeySessionRelease(
                                                   session_id_len);
 
   return response;
+}
+
+MediaKeyTypeResponse OpenCdmPlatformImpl::IsTypeSupported(
+    const std::string& keysystem,const std::string& mimeType) {
+
+    CDM_DLOG() << "OpenCdmPlatformCdmiImpl::IsTypeSupported";
+    MediaKeyTypeResponse response = com_handler_->IsTypeSupported(keysystem,mimeType);
+    return response;
 }
 
 // OpenCdmComCallbackReceiver inheritance

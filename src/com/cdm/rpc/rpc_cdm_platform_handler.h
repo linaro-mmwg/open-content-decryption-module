@@ -17,13 +17,22 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COM_CDM_RPC_RPC_CDM_PLATFORM_HANDLER_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COM_CDM_RPC_RPC_CDM_PLATFORM_HANDLER_H_
 
+#include <cstring>
+#include <cstdbool>
 #include <rpc/rpc.h>
 #include <string>
 
+#ifdef WPE
+#include <open_cdm_platform_common.h>
+#include <open_cdm_platform_com.h>
+#include <open_cdm_platform_com_callback_receiver.h>
+#include <opencdm_callback.h>
+#else	//chrome
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_common.h"
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com.h"
 #include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com_callback_receiver.h"
 #include "media/cdm/ppapi/external_open_cdm/src/com/common/rpc/opencdm_callback.h"
+#endif
 
 namespace media {
 
@@ -34,13 +43,15 @@ class RpcCdmPlatformHandler : public OpenCdmPlatformCom {
 
   // EME equivalent: new MediaKeys()
   MediaKeysResponse MediaKeys(std::string key_system) override;
-
+  //EME equivalent : media_key_.isTypeSupported()
+  MediaKeyTypeResponse IsTypeSupported(const std::string&,
+                                            const std::string&) override;
   // EME equivalent: media_keys_.createSession()
   MediaKeysCreateSessionResponse MediaKeysCreateSession(
       const std::string& init_data_type, const uint8_t* init_data,
       int init_data_length) override;
 
-  // EME equivalent: media_keys_.loadSession()
+ // EME equivalent: media_keys_.loadSession()
   MediaKeysLoadSessionResponse MediaKeysLoadSession(
       char *session_id_val, uint32_t session_id_len) override;
 
@@ -48,6 +59,20 @@ class RpcCdmPlatformHandler : public OpenCdmPlatformCom {
   MediaKeySessionUpdateResponse MediaKeySessionUpdate(
       const uint8 *pbKey, uint32 cbKey, char *session_id_val,
       uint32_t session_id_len) override;
+
+  // EME equivalent: media_key_session_.set_server_certificate()
+  MediaKeySetServerCertificateResponse MediaKeySetServerCertificate(
+      const uint8_t *pbServerCert, uint32_t cbServerCert) override;
+
+  // EME equivalent: media_key_session_.remove()
+  MediaKeySessionRemoveResponse MediaKeySessionRemove(
+      char *session_id_val, uint32_t session_id_len) override;
+
+  // EME equivalent: media_key_session_.close()
+  MediaKeySessionCloseResponse MediaKeySessionClose(
+      char *session_id_val, uint32_t session_id_len) override;
+
+
 
   // EME equivalent: media_key_session_.release()
   MediaKeySessionReleaseResponse MediaKeySessionRelease(

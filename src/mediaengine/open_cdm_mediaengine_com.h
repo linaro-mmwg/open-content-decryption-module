@@ -17,7 +17,11 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_COM_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_COM_H_
 
+#ifdef WPE
+#include "open_cdm_mediaengine.h"
+#else	//chrome
 #include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine.h"
+#endif
 
 namespace media {
 
