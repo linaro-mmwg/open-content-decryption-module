@@ -39,11 +39,24 @@ Fraunhofer FOKUS has developed the Open Content Decryption Module (OCDM) accordi
 * build the following target (check *[Build notes for Chromium](docs/build_notes_chromium.md)* section before building)  
   ```# ninja -C out/Debug chrome opencdmadapter```
 
+### ...for WPE Browser
+* add meta-metrological layer to yocto layer's directory   
+  ```# git clone https://github.com/Metrological/meta-metrological```   
+  ```# bitbake-layers add-layer ../meta-metrological``` absolute or reference path of meta-metrological layer to be mentioned   
+* ensure 'opencdm' is added to the PACKAGECONFIG of wpewebkit recipe   
+* build WPE   
+  ```# bitbake wpewebkit```   
+  Note: Linaro [CDM](https://github.com/linaro-home/open-content-decryption-module) to be built before building WPE webkit and it's recipe yet to be uploaded into meta-linaro yocto layer   
+
 ## How to run
 
  * Build and run the Linaro [CDMi](https://github.com/kuscsik/linaro-cdmi) project.
  * Run Chromium with OCDM enabled:  
    ```# out/Debug/chrome --no-sandbox--register-pepper-plugins="out/Debug/libopencdmadapter.so;application/x-ppapi-clearkey-cdm"```
+### ...for WPE Browser
+ * Run WPE browser with wayland or westeros backend display   
+   ```# export WAYLAND_DISPLAY=<backend display name>```   
+   ```# ./WPELauncher <url>```
 
 ## Scope
 
@@ -73,6 +86,8 @@ Currently OCDM development is compatible with following Web browers:
  * Linux
 * Opera SDK
  * Linux
+* WPE Browser (support work currently in progress)
+ 
 
 ## Folder Structure
 

@@ -18,10 +18,10 @@
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_CDM_OPEN_CDM_PLATFORM_IMPL_H_
 
 #include <string>
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_common.h"
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com_callback_receiver.h"
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform.h"
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com.h"
+#include "open_cdm_platform_common.h"
+#include "open_cdm_platform_com_callback_receiver.h"
+#include "open_cdm_platform.h"
+#include "open_cdm_platform_com.h"
 
 namespace media {
 
@@ -48,10 +48,25 @@ class OpenCdmPlatformImpl : public OpenCdmPlatform,
       const uint8 *pbKey, uint32 cbKey, char *session_id_val,
       uint32_t session_id_len) override;
 
-  // EME equivalent: media_key_session_.release()
-  MediaKeySessionReleaseResponse MediaKeySessionRelease(
+  // EME equivalent: media_key_.set_server_certificate()
+  MediaKeySetServerCertificateResponse MediaKeySetServerCertificate(
+      const uint8_t *pbServerCert, uint32_t cbServerCert) override;
+
+  // EME equivalent: media_key_session_.remove()
+  MediaKeySessionRemoveResponse MediaKeySessionRemove(
       char *session_id_val, uint32_t session_id_len) override;
 
+  // EME equivalent: media_key_session_.close()
+  MediaKeySessionCloseResponse MediaKeySessionClose(
+      char *session_id_val, uint32_t session_id_len) override;
+
+
+// EME equivalent: media_key_session_.release()
+  MediaKeySessionReleaseResponse MediaKeySessionRelease(
+      char *session_id_val, uint32_t session_id_len) override;
+  //EME equivalent : media_key_.isTypeSupported()
+  MediaKeyTypeResponse IsTypeSupported(const std::string&,
+                                            const std::string&) override;
   // OpenCdmComCallbackReceiver inheritance
   void ErrorCallback(OpenCdmPlatformSessionId platform_session_id,
                              uint32_t sys_err, std::string err_msg) override;

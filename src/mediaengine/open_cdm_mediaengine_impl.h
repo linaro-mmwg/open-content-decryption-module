@@ -17,11 +17,12 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_IMPL_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_MEDIAENGINE_OPEN_CDM_MEDIAENGINE_IMPL_H_
 
-#include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine.h"
+#include "open_cdm_mediaengine.h"
+#include "open_cdm_mediaengine_com.h"
 #include <rpc/rpc.h>
 #include <string>
-#include "media/cdm/ppapi/external_open_cdm/src/com/common/shmemsem/shmemsem_helper.h"
-#include "media/cdm/ppapi/external_open_cdm/src/com/mediaengine/rpc/rpc_cdm_mediaengine_handler.h"
+#include "shmemsem_helper.h"
+#include "rpc_cdm_mediaengine_handler.h"
 
 namespace media {
 
@@ -42,6 +43,7 @@ class OpenCdmMediaengineImpl : public OpenCdmMediaengine {
                                   const uint8_t *pbData, uint32_t cbData,
                                   uint8_t *out, uint32_t &out_size) override;
 
+  int ReleaseMem() override;
   ~OpenCdmMediaengineImpl() override;
  private:
   RpcCdmMediaengineHandler *media_engine_com_;

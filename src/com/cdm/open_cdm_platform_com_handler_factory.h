@@ -17,9 +17,9 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COM_CDM_OPEN_CDM_PLATFORM_COM_HANDLER_FACTORY_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COM_CDM_OPEN_CDM_PLATFORM_COM_HANDLER_FACTORY_H_
 
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com.h"
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com_callback_receiver.h"
-#include "media/cdm/ppapi/external_open_cdm/src/com/cdm/rpc/rpc_cdm_platform_handler.h"
+#include <open_cdm_platform_com.h>
+#include <open_cdm_platform_com_callback_receiver.h>
+#include <rpc_cdm_platform_handler.h>
 
 namespace media {
 

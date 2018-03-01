@@ -18,8 +18,8 @@
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_CDM_OPEN_CDM_PLATFORM_H_
 
 #include <string>
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_common.h"
-#include "media/cdm/ppapi/external_open_cdm/src/cdm/open_cdm_platform_com_callback_receiver.h"
+#include "open_cdm_platform_common.h"
+#include "open_cdm_platform_com_callback_receiver.h"
 
 namespace media {
 
@@ -45,11 +45,24 @@ class OpenCdmPlatform {
       const uint8 *pbKey, uint32 cbKey, char *session_id_val,
       uint32_t session_id_len) = 0;
 
+  // EME equivalent: media_key_session_.setServerCertificate()
+  virtual MediaKeySetServerCertificateResponse MediaKeySetServerCertificate(
+      const uint8_t *pbServerCert, uint32_t cbServerCert) = 0;
+
+  // EME equivalent: media_key_session_.remove()
+  virtual MediaKeySessionRemoveResponse MediaKeySessionRemove(
+      char *session_id_val, uint32_t session_id_len) = 0;
+
+  // EME equivalent: media_key_session_.close()
+  virtual MediaKeySessionCloseResponse MediaKeySessionClose(
+      char *session_id_val, uint32_t session_id_len) = 0;
+
+  //EME equivalent : media_key_.isTypeSupported()
+  virtual MediaKeyTypeResponse IsTypeSupported(const std::string&,
+                                            const std::string&) = 0;
   // EME equivalent: media_key_session_.release()
   virtual MediaKeySessionReleaseResponse MediaKeySessionRelease(
       char *session_id_val, uint32_t session_id_len) = 0;
-
-
   virtual ~OpenCdmPlatform() {
   }
   OpenCdmPlatform(OpenCdmPlatformComCallbackReceiver *callback_receiver_);

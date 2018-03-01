@@ -16,6 +16,10 @@ struct rpc_request_mediakeys {
     char key_system <>;
 };
 
+struct rpc_request_certificate {
+    uint8_t certificate <>;
+};
+
 struct rpc_request_callback_info {
     char hostname <>;
     uint64_t prog_num;
@@ -28,6 +32,9 @@ struct rpc_request_create_session {
     rpc_request_callback_info callback_info;
 };
 
+struct rpc_request_session_load {
+    char session_id <>;
+};
 struct rpc_request_load_session {
     char session_id <>;
 };
@@ -35,6 +42,14 @@ struct rpc_request_load_session {
 struct rpc_request_session_update {
     char session_id <>;
     uint8_t key <>;
+};
+
+struct rpc_request_session_remove {
+    char session_id <>;
+};
+
+struct rpc_request_session_close {
+    char session_id <>;
 };
 
 struct rpc_request_session_release {
@@ -71,5 +86,8 @@ program OPEN_CDM {
     rpc_response_generic RPC_OPEN_CDM_MEDIAKEYSESSION_UPDATE(rpc_request_session_update) = 5;
     rpc_response_generic RPC_OPEN_CDM_MEDIAKEYSESSION_RELEASE(rpc_request_session_release) = 6;
     rpc_response_generic RPC_OPEN_CDM_MEDIAENGINE(rpc_request_mediaengine_data) = 7;
+    rpc_response_generic RPC_OPEN_CDM_MEDIAKEYS_SET_SERVER_CERTIFICATE(rpc_request_certificate) = 8;
+    rpc_response_generic RPC_OPEN_CDM_MEDIAKEYSESSION_REMOVE(rpc_request_session_remove) = 9;
+    rpc_response_generic RPC_OPEN_CDM_MEDIAKEYSESSION_CLOSE(rpc_request_session_close) = 10;
     } = 1;
 } = 0x61135687; /* FAMEFHG */

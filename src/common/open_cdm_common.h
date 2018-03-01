@@ -18,9 +18,11 @@
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COMMON_OPEN_CDM_COMMON_H_
 
 #ifdef OCDM_USE_PLAYREADY
-#include "media/cdm/ppapi/external_open_cdm/src/include/playready/constants.h"
+#include "playready/constants.h"
 #else
-#include "media/cdm/ppapi/external_open_cdm/src/include/clearkey/constants.h"
+#ifdef CLEAR_KEY_CDM_USE_FFMPEG_DECODER
+#include "clearkey/constants.h"
+#endif
 #endif
 
 

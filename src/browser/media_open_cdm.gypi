@@ -115,6 +115,17 @@
             '<(DEPTH)/media/cdm/ppapi/external_clear_key/cdm_video_decoder.cc',
             '<(DEPTH)/media/cdm/ppapi/external_clear_key/cdm_video_decoder.h',
           ],
+          'include_dirs': [
+            '<(DEPTH)/media/cdm/ppapi',
+            '../cdm',
+            '../mediaengine',
+            '../com/cdm',
+            '../com/cdm/rpc',
+            '../com/common/rpc',
+            '../com/common/shmemsem',
+            '../com/mediaengine/rpc',
+            '../include',
+          ],
           # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
           'msvs_disabled_warnings': [ 4267, ],
         },

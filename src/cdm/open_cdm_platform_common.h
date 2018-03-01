@@ -18,7 +18,11 @@
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_CDM_OPEN_CDM_PLATFORM_COMMON_H_
 
 #include <string>
-#include "base/basictypes.h"
+#include <stddef.h>
+#include <limits.h>
+#include <stdint.h>
+typedef unsigned char      uint8;
+typedef unsigned int       uint32;
 
 namespace media {
 
@@ -32,7 +36,7 @@ enum PLATFORM_CALL_STATE {
 
 struct PlatformResponse {
   PLATFORM_CALL_STATE platform_response;
-  int32 sys_err;
+  int32_t sys_err;
 };
 
 struct OpenCdmPlatformSessionId {
@@ -42,14 +46,25 @@ struct OpenCdmPlatformSessionId {
 
 struct MediaKeysResponse : public PlatformResponse {
 };
+struct MediaKeySetServerCertificateResponse : public PlatformResponse {
+};
+struct MediaKeyTypeResponse : public PlatformResponse {
+};
 struct MediaKeysCreateSessionResponse : public PlatformResponse {
   OpenCdmPlatformSessionId session_id;
   std::string licence_req;
 };
+
+struct MediaKeySessionRemoveResponse : public PlatformResponse {
+};
+struct MediaKeySessionCloseResponse : public PlatformResponse {
+};
 struct MediaKeysLoadSessionResponse : public PlatformResponse {
 };
+
 struct MediaKeySessionUpdateResponse : public PlatformResponse {
 };
+
 struct MediaKeySessionReleaseResponse : public PlatformResponse {
 };
 

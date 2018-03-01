@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-#include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine_impl.h"
-#include "media/cdm/ppapi/external_open_cdm/src/com/mediaengine/rpc/rpc_cdm_mediaengine_handler.h"
-
-#include "media/cdm/ppapi/cdm_logging.h"
+#include "open_cdm_mediaengine_impl.h"
+#include <rpc_cdm_mediaengine_handler.h>
+#include <cdm_logging.h>
 
 namespace media {
 
 OpenCdmMediaengineImpl::OpenCdmMediaengineImpl(char *session_id_val,
                                                uint32_t session_id_len) {
   media_engine_com_ = &(RpcCdmMediaengineHandler::getInstance());
+  CDM_DLOG() << "Created new media engine impl ";
 
   if( !media_engine_com_->CreateMediaEngineSession(session_id_val,
       session_id_len, 0, 0)) {
     CDM_DLOG() << "Failed to create media engine session";
   }
-
-  CDM_DLOG() << "Created new media engine impl ";
 }
 
 OpenCdmMediaengineImpl::OpenCdmMediaengineImpl(char *session_id_val,
@@ -66,4 +64,10 @@ DecryptResponse OpenCdmMediaengineImpl::Decrypt(const uint8_t *pbIv,
   return response;
 }
 
+int OpenCdmMediaengineImpl::ReleaseMem() {
+  CDM_DLOG() << "OpenCdmMediaengineImpl::ReleaseMem ";
+  int response;
+  response = media_engine_com_->ReleaseMem();
+  return response;
+}
 }  // namespace media
