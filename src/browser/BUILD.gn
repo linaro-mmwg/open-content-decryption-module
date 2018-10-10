@@ -99,6 +99,10 @@ if (enable_opencdm && enable_library_cdms) {
       ]
     }
 
+    if (playready) {
+      defines += [ "OCDM_USE_PLAYREADY" ]
+    }
+
     if (is_mac) {
       ldflags += [ "-Wl,-install_name,@loader_path/libopencdm.dylib" ]
     }

@@ -1,4 +1,5 @@
 declare_args() {
   # Allow opencdmadapter to be built in Chromium.
   enable_opencdm = false
+  playready = false
 }
