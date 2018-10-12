@@ -33,6 +33,8 @@ CFLAGS_L := -fPIC -D_REENTRANT -Wall $(LDFLAGS)
 MODULES   := cdm mediaengine common com/cdm/rpc com/cdm  com/mediaengine/rpc com/common/shmemsem
 OCDM_SOURCES_C =  $(wildcard $(OCDM_DIR)/com/common/rpc/*.c)
 OCDM_SOURCES_CPP = $(wildcard $(OCDM_DIR)/browser/wpe/opencdm/*.cpp)
+OCDM_SOURCES_CPP := $(OCDM_SOURCES_CPP) $(wildcard $(OCDM_DIR)/com/common/ion/*.cpp)
+OCDM_SOURCES_CPP := $(OCDM_SOURCES_CPP) $(wildcard $(OCDM_DIR)/com/common/socket/*.cpp)
 OCDM_SOURCES_CC_DIR   := $(addprefix $(OCDM_DIR)/,$(MODULES))
 OCDM_SOURCES_CC     := $(foreach sdir,$(OCDM_SOURCES_CC_DIR),$(wildcard $(sdir)/*.cc))
 OCDM_HEADERS = $(wildcard $(OCDM_DIR)/com/common/rpc/*.h)
@@ -46,6 +48,8 @@ OCDM_OBJECTS_CPP = $(OCDM_SOURCES_CPP:.cpp=.o)
 OCDM_INCLUDES :=  $(OCDM_HEADER_PATH) \
                  -I $(OCDM_DIR)/include \
 	         -I $(OCDM_DIR)/com/common/rpc \
+	         -I $(OCDM_DIR)/com/common/ion \
+	         -I $(OCDM_DIR)/com/common/socket \
 		 -I $(OCDM_DIR)/browser/wpe/opencdm
 
 CXFLAGS := -std=c++11 -g $(OCDM_INCLUDES) -pthread $(CXXFLAGS)
