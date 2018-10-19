@@ -17,7 +17,9 @@
 #ifndef MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COMMON_OPEN_CDM_COMMON_H_
 #define MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COMMON_OPEN_CDM_COMMON_H_
 
-#ifdef OCDM_USE_PLAYREADY
+#include "opencdm_features.h"
+
+#if BUILDFLAG(OCDM_USE_PLAYREADY)
 #include "media/cdm/ppapi/external_open_cdm/src/include/playready/constants.h"
 #else
 #include "media/cdm/ppapi/external_open_cdm/src/include/clearkey/constants.h"

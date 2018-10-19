@@ -21,12 +21,12 @@
 
 #include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine.h"
 #include "media/cdm/ppapi/external_open_cdm/src/mediaengine/open_cdm_mediaengine_impl.h"
-
+#include "opencdm_features.h"
 #include "media/cdm/ppapi/cdm_logging.h"
 
 namespace media {
 
-#ifdef OCDM_USE_PLAYREADY
+#ifdef BUILDFLAG(OCDM_USE_PLAYREADY)
 const std::string open_cdm_key_system = "com.microsoft.playready";
 #else
 const std::string open_cdm_key_system = "org.chromium.externalclearkey";

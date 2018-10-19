@@ -23,15 +23,26 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/buildflag_header.gni")
 import("//build/config/features.gni")
 import("//media/cdm/ppapi/cdm_paths.gni")
 import("//media/cdm/ppapi/external_open_cdm/opencdm.gni")
 import("//media/cdm/ppapi/ppapi_cdm_adapter.gni")
 import("//media/media_options.gni")
 
+buildflag_header("opencdm_features") {
+  header = "opencdm_features.h"
+
+  flags = [
+    "OCDM_USE_PLAYREADY=$playready",
+  ]
+}
+
 if (enable_opencdm && enable_library_cdms) {
   shared_library("opencdm") {
     sources = [
+      "//media/cdm/ppapi/cdm_logging.cc",
+      "//media/cdm/ppapi/cdm_logging.h",
       "../../../clear_key_cdm/cdm_host_proxy.h",
       "../../../clear_key_cdm/cdm_host_proxy_impl.h",
       "../../../clear_key_cdm/cdm_video_decoder.cc",
@@ -63,6 +74,10 @@ if (enable_opencdm && enable_library_cdms) {
       "../mediaengine/open_cdm_mediaengine.h",
       "../mediaengine/open_cdm_mediaengine_impl.cc",
       "../mediaengine/open_cdm_mediaengine_impl.h",
+    ]
+
+    include_dirs = [
+      "$target_gen_dir/",
     ]
 
     # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
@@ -99,10 +114,6 @@ if (enable_opencdm && enable_library_cdms) {
       ]
     }
 
-    if (playready) {
-      defines += [ "OCDM_USE_PLAYREADY" ]
-    }
-
     if (is_mac) {
       ldflags += [ "-Wl,-install_name,@loader_path/libopencdm.dylib" ]
     }
@@ -119,6 +130,7 @@ if (enable_opencdm && enable_library_cdms) {
 
     deps = [
       ":opencdm",
+      ":opencdm_features",
       "//base",
       "//media:shared_memory_support",
       "//ui/gfx/geometry",
@@ -136,11 +148,16 @@ source_set("opencdm_ks") {
     "opencdm_key_systems.h",
   ]
 
+  include_dirs = [
+      "$target_gen_dir/",
+  ]
+
   deps = [
     "//base",
     "//components/cdm/common",
     "//content/public/renderer",
     "//media",
     "//media:media_features",   # for ENABLE_LIBRARY_CDMS
+    ":opencdm_features",
   ]
 }

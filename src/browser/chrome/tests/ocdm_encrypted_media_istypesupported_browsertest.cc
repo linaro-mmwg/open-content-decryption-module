@@ -43,7 +43,7 @@
 #error This file needs to be updated to run on Android.
 #endif
 
-#if defined(USE_PROPRIETARY_CODECS)
+#if BUILDFLAG(USE_PROPRIETARY_CODECS)
 #define EXPECT_PROPRIETARY EXPECT_TRUE
 #else
 #define EXPECT_PROPRIETARY EXPECT_FALSE
@@ -55,7 +55,7 @@
 
 namespace chrome {
 
-#if defined(ENABLE_PEPPER_CDMS)
+#if BUILDFLAG(ENABLE_PEPPER_CDMS)
 
 const char kOpenCDM[] = "com.opencdm.mockdrm";
 const char kOpenCDMParentOnly[] = "com.opencdm";

@@ -20,11 +20,12 @@
 #include "media/base/key_system_properties.h"
 #include "media/media_features.h"
 #include "opencdm_key_systems.h"
+#include "opencdm_features.h"
 using namespace media;
 
 #if BUILDFLAG(ENABLE_LIBRARY_CDMS)
 
-#ifdef OCDM_USE_PLAYREADY
+#if BUILDFLAG(OCDM_USE_PLAYREADY)
 static const char kPlayreadyKeySystem[] =
     "com.microsoft.playready";
 static const char kPlayreadyPepperType[] =
@@ -45,7 +46,7 @@ class PlayreadyKeyProperties : public KeySystemProperties {
         return true;
 
       case media::EmeInitDataType::CENC:
-#if defined(USE_PROPRIETARY_CODECS)
+#if BUILDFLAG(USE_PROPRIETARY_CODECS)
         return true;
 #else
         return false;
@@ -59,7 +60,7 @@ class PlayreadyKeyProperties : public KeySystemProperties {
   }
 
   SupportedCodecs GetSupportedCodecs() const override {
-#if defined(USE_PROPRIETARY_CODECS)
+#if BUILDFLAG(USE_PROPRIETARY_CODECS)
     return media::EME_CODEC_MP4_ALL | media::EME_CODEC_WEBM_ALL;
 #else
     return media::EME_CODEC_WEBM_ALL;
@@ -121,7 +122,7 @@ class ExternalOpenCdmKeyProperties : public KeySystemProperties {
         return true;
 
       case media::EmeInitDataType::CENC:
-#if defined(USE_PROPRIETARY_CODECS)
+#if BUILDFLAG(USE_PROPRIETARY_CODECS)
         return true;
 #else
         return false;
@@ -135,7 +136,7 @@ class ExternalOpenCdmKeyProperties : public KeySystemProperties {
   }
 
   SupportedCodecs GetSupportedCodecs() const override {
-#if defined(USE_PROPRIETARY_CODECS)
+#if BUILDFLAG(USE_PROPRIETARY_CODECS)
     return media::EME_CODEC_MP4_ALL | media::EME_CODEC_WEBM_ALL;
 #else
     return media::EME_CODEC_WEBM_ALL;
@@ -178,7 +179,7 @@ class ExternalOpenCdmKeyProperties : public KeySystemProperties {
 #endif
 
 void AddExternalOpenCdmKeySystems(std::vector<std::unique_ptr<KeySystemProperties>>* key_systems) {
-#ifdef OCDM_USE_PLAYREADY
+#if BUILDFLAG(OCDM_USE_PLAYREADY)
   //TODO: AddPlayreadyKeySystem(key_systems);
   key_systems->emplace_back(
     new PlayreadyKeyProperties(kPlayreadyKeySystem));
