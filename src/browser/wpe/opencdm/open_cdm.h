@@ -73,7 +73,7 @@ int Update(uint8_t*, int, std::string&);
   void SelectKeySystem(const std::string& );
   void SelectSession(const std::string& );
   bool IsTypeSupported(const  std::string& keySystem,const  std::string& mimeType);
-  int Decrypt(unsigned char*, uint32_t, unsigned char*, uint32_t);
+  int Decrypt(unsigned char*, uint32_t, unsigned char*, uint32_t, uint32_t *, uint32_t, int, uint32_t);
   int ReleaseMem();
 
 private:

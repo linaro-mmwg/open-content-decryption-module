@@ -52,14 +52,18 @@ OpenCdmMediaengineImpl::~OpenCdmMediaengineImpl() {
 DecryptResponse OpenCdmMediaengineImpl::Decrypt(const uint8_t *pbIv,
                                                 uint32_t cbIv,
                                                 const uint8_t *pbData,
-                                                uint32_t cbData, uint8_t *out,
+                                                uint32_t cbData,
+                                                uint32_t *pdwSubSampleMapping,
+                                                uint32_t cdwSubSampleMapping,
+                                                uint8_t *out,
                                                 uint32_t &out_size) {
   printf("_------ Decrypt \n");
   CDM_DLOG() << "OpenCdmMediaengineImpl::Decrypt: ";
   DecryptResponse response;
 
-  response = media_engine_com_->Decrypt(pbIv, cbIv, pbData, cbData, out,
-                                        out_size);
+  response = media_engine_com_->Decrypt(pbIv, cbIv, pbData, cbData,
+                                        pdwSubSampleMapping, cdwSubSampleMapping,
+                                        out, out_size);
 
   return response;
 }

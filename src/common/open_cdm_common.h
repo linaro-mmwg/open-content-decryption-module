@@ -30,4 +30,26 @@ namespace media {
 const char kOpenCdmVersion[] = "1.0.0.0";
 }  // namespace media
 
+
+/* OpenCDM Secure Data Path configuration */
+/* SDP disabled: OpenCDM do not use SDP. When OCDM_SDP is not defined, SDP
+   is disabled. */
+#define OCDM_SDP_TYPE_DISABLED  0
+/* SDP prototype: OpenCDM allocates a buffer from the ION heap specified by
+   ION_SECURE_HEAP_ID_DECODER. It decrypts the data into that buffer, maps the
+   buffer and copies the data into the destination buffer. This assumes that
+   there is no memory protection on the ION heap. This is used to validate
+   the ION integration in OpenCDM and DRM layers. */
+#define OCDM_SDP_TYPE_PROTOTYPE 1
+/* End-to-end SDP: OpenCDM gets a file descriptor referencing a secure ION
+   buffer. It provides the file descriptor to the DRM layer where the data
+   is decrypted into the secure memory. */
+#define OCDM_SDP_TYPE_END2END   2
+
+#define OCDM_SDP_PROTOTYPE (defined(OCDM_SDP) && (OCDM_SDP == OCDM_SDP_TYPE_PROTOTYPE))
+#define OCDM_SDP_END2END   (defined(OCDM_SDP) && (OCDM_SDP == OCDM_SDP_TYPE_END2END))
+#define OCDM_SDP_ANY       (OCDM_SDP_PROTOTYPE || OCDM_SDP_END2END)
+#define OCDM_SDP_DISABLED  (!OCDM_SDP_ANY)
+
+
 #endif  // MEDIA_CDM_PPAPI_EXTERNAL_OPEN_CDM_COMMON_OPEN_CDM_COMMON_H_

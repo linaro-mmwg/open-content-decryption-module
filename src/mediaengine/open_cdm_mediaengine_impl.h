@@ -41,6 +41,7 @@ class OpenCdmMediaengineImpl : public OpenCdmMediaengine {
   // synchronous decryption
   DecryptResponse Decrypt(const uint8_t *pbIv, uint32_t cbIv,
                                   const uint8_t *pbData, uint32_t cbData,
+                                  uint32_t *pdwSubSampleMapping, uint32_t cdwSubSampleMapping,
                                   uint8_t *out, uint32_t &out_size) override;
 
   int ReleaseMem() override;

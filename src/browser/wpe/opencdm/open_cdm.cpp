@@ -248,9 +248,12 @@ int OpenCdm::ReleaseMem() {
   return (false);
 }
 
-int OpenCdm::Decrypt(unsigned char* encryptedData, uint32_t encryptedDataLength, unsigned char* ivData, uint32_t ivDataLength) {
+int OpenCdm::Decrypt(unsigned char* encryptedData, uint32_t encryptedDataLength, unsigned char* ivData, uint32_t ivDataLength,
+                     uint32_t *pdwSubSampleMapping, uint32_t cdwSubSampleMapping, int secureFd, uint32_t secureSize) {
   int ret = 1;
-  uint32_t outSize;
+  uint8_t *out = NULL;
+  uint32_t out_size = 0;
+
   CDM_DLOG() << "OpenCdm::Decrypt session_id : " << m_session_id.session_id << endl;
   CDM_DLOG() << "OpenCdm::Decrypt session_id_len : " << m_session_id.session_id_len << endl;
   CDM_DLOG() << "OpenCdm::Decrypt encryptedDataLength : " << encryptedDataLength << endl;
@@ -267,8 +270,18 @@ int OpenCdm::Decrypt(unsigned char* encryptedData, uint32_t encryptedDataLength,
   }
 
   CDM_DLOG() << "Returned back to OpenCdm::Decrypt";
+
+#if OCDM_SDP_END2END
+  out = (uint8_t *)&secureFd;
+  out_size = secureSize;
+#else
+  out = encryptedData;
+  out_size = encryptedDataLength;
+#endif
+
   DecryptResponse dr = media_engine_->Decrypt((const uint8_t*)ivData, ivDataLength,
-      (const uint8_t*)encryptedData, encryptedDataLength, (uint8_t*)encryptedData, outSize);
+      (const uint8_t*)encryptedData, encryptedDataLength,
+      pdwSubSampleMapping, cdwSubSampleMapping, out, out_size);
 
   CDM_DLOG() << "media_engine_->Decrypt done " << dr.platform_response;
 
