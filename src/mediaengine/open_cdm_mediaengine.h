@@ -63,6 +63,7 @@ class OpenCdmMediaengine {
 
   virtual DecryptResponse Decrypt(const uint8_t *pbIv, uint32_t cbIv,
                                   const uint8_t *pbData, uint32_t cbData,
+                                  uint32_t *pdwSubSampleMapping, uint32_t cdwSubSampleMapping,
                                   uint8_t *out, uint32_t &out_size) = 0;
 
   virtual int ReleaseMem() = 0;

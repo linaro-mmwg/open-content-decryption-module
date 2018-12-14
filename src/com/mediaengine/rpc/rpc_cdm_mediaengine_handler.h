@@ -20,10 +20,11 @@
 #include <rpc/rpc.h>
 #include <string>
 
+#include <open_cdm_common.h>
 #include <shmemsem_helper.h>
 #include <open_cdm_mediaengine_com.h>
 
-#ifdef OCDM_SDP_PROTOTYPE
+#if OCDM_SDP_ANY
 #include "socket_client_helper.h"
 #endif
 
@@ -44,6 +45,7 @@ class RpcCdmMediaengineHandler : public OpenCdmMediaengineCom {
 
   DecryptResponse Decrypt(const uint8_t *pbIv, uint32_t cbIv,
                                   const uint8_t *pbData, uint32_t cbData,
+                                  uint32_t *pdwSubSampleMapping, uint32_t cdwSubSampleMapping,
                                   uint8_t *out, uint32_t &out_size) override;
   int ReleaseMem() override;
   //TODO (sph): make out const
@@ -57,7 +59,7 @@ class RpcCdmMediaengineHandler : public OpenCdmMediaengineCom {
 
   CLIENT *rpcClient;
 
-#ifdef OCDM_SDP_PROTOTYPE
+#if OCDM_SDP_ANY
   SocketClient mSocketClient;
 #endif
 
