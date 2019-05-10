@@ -1,4 +1,3 @@
-
 # Linaro CDM
 
 Linaro CDM is a fork of the [Open Content Decryption Module (OCDM)](https://github.com/fraunhoferfokus/open-content-decryption-module). The reason
